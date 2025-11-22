@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart OMR System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #f3f4f6;
+        }
+        iframe {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1; 
+            text-align: center;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader">
+        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-sm font-medium">Loading Script...</p>
+    </div>
+
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycbzynOyjoPF416SSh69E1Im1KaO9o8s524r6huglFfsLpr46ovR6YaFnw2CnKlYtlj8gjQ/exec"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    ></iframe>
+
+    <button onclick="openModal()" 
+        class="fixed bottom-6 left-6 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform hover:scale-105 z-50 flex items-center gap-2">
+        <i class="fas fa-crown"></i> Upgrade Plan
+    </button>
+
+    <a href="https://script.google.com/macros/s/AKfycbwUNtl-5F9_6wffMLFYASaQ7FDhIqtjMEZIopIB5OgDSg7Wb4xjduz1Y8DOW_p3vlJsrQ/exec" 
+       target="_blank"
+       class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-transform hover:scale-110 z-50 flex items-center justify-center"
+       title="Open in new tab">
+        <i class="fas fa-external-link-alt"></i>
+    </a>
+
+    <div id="paymentModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-[60]">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm relative animate-fade-in-up">
+            <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <h2 class="text-2xl font-bold text-gray-800 mb-1">Upgrade to Pro</h2>
+            <p class="text-gray-500 text-sm mb-4">Get unlimited OMR checking.</p>
+
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                <p class="text-green-800 text-sm font-semibold mb-2">Send <span class="text-lg font-bold">2,000 PKR</span> to:</p>
+                <div class="flex items-center gap-3 mb-2">
+                    <img src="https://play-lh.googleusercontent.com/Sh5Fp_9z-G2CMzF8H7z0oJ_fD6UX0qYy_X_fL1cM_qg3x7C_w-v-u5lC_k_hZ_l_lQ=w240-h480-rw" class="w-8 h-8 rounded" alt="EP">
+                    <div>
+                        <p class="font-bold text-gray-800">0344 0544791</p>
+                        <p class="text-xs text-gray-600">Muhammad Haroon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Enter Your Account Email</label>
+                    <input type="email" id="payEmail" placeholder="user@gmail.com" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Transaction ID (TID)</label>
+                    <input type="text" id="payTid" placeholder="e.g. 852XXXXX" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+                <button onclick="submitPayment()" id="payBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition shadow-md">
+                    Verify Payment
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script>
+        // *** PASTE YOUR DEPLOYED GOOGLE SCRIPT URL HERE ***
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzynOyjoPF416SSh69E1Im1KaO9o8s524r6huglFfsLpr46ovR6YaFnw2CnKlYtlj8gjQ/exec";
+
+        function openModal() {
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function submitPayment() {
+            const email = document.getElementById('payEmail').value;
+            const tid = document.getElementById('payTid').value;
+            const btn = document.getElementById('payBtn');
+
+            if (!email || !tid) {
+                alert("Please fill in both Email and Transaction ID.");
+                return;
+            }
+
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "submitPayment", email: email, tid: tid })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Success! Payment submitted. Your account will be active in 1 hour.");
+                    closeModal();
+                } else {
+                    alert("Error: " + data.message);
+                }
+                btn.innerText = "Verify Payment";
+                btn.disabled = false;
+            })
+            .catch(error => {
+                alert("Connection Error. Please try again.");
+                btn.innerText = "Verify Payment";
+                btn.disabled = false;
+            });
+        }
+    </script>
+
+</body>
+</html>
