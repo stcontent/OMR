@@ -27,32 +27,73 @@
 
         /* TOAST */
         #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
-        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; }
+        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; }
 
         /* HERO */
         .hero { background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; padding: 80px 0; margin-bottom: 40px; }
         
-        /* AUTH CARDS */
-        .auth-card { background: white; width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin: auto; }
-        canvas { background: #f1f3f4; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; }
+        /* AUTH CARDS - UPDATED FOR MOBILE */
+        .auth-card { 
+            background: white; 
+            width: 100%; 
+            max-width: 400px; /* Keeps it nice on desktop, shrinks on mobile */
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            margin: 20px auto; 
+        }
+        canvas { background: #f1f3f4; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; max-width: 100%; }
 
-        /* DASHBOARD */
-        .dash-container { max-width: 1000px; margin: 30px auto; padding: 20px; }
-        .account-card { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
+        /* DASHBOARD - UPDATED FOR MOBILE */
+        .dash-container { max-width: 1000px; margin: 20px auto; padding: 15px; }
+        .account-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
         .status-active { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
         .status-inactive { background: #ffebee; color: #c62828; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
-        .tool-btn { width: 180px; padding: 25px; border: none; border-radius: 10px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; }
+        
+        /* TOOLS - UPDATED FOR MOBILE */
+        .tool-btn { 
+            width: 180px; 
+            padding: 25px; 
+            border: none; 
+            border-radius: 10px; 
+            background: white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            transition: 0.3s; 
+        }
         .tool-btn:hover { transform: translateY(-5px); }
 
         /* MODAL */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; }
-        .modal-custom { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 900px; max-height: 90vh; overflow-y: auto; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 15px; }
+        .modal-custom { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
         
         .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; }
         
         /* Loader Overlay */
         #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
+
+        /* --- MOBILE SPECIFIC FIXES --- */
+        @media (max-width: 768px) {
+            .hero { padding: 50px 0; }
+            .hero h1 { font-size: 2.5rem; }
+            
+            /* Stack dashboard details vertically on small screens */
+            .detail-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .detail-row span:last-child { font-weight: 600; }
+            
+            /* Make buttons full width on mobile */
+            .tool-btn { width: 100%; margin-bottom: 10px; }
+            .d-flex.gap-4 { gap: 10px !important; }
+            
+            /* Adjust Modal */
+            .modal-custom { padding: 15px; max-height: 95vh; }
+            
+            /* Auth page alignment */
+            .full-height { justify-content: start; padding-top: 20px; }
+            
+            /* Navbar padding */
+            .navbar-collapse { background: white; padding: 15px; border-radius: 0 0 10px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 1px solid #eee; }
+        }
     </style>
 </head>
 <body>
@@ -67,19 +108,22 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" onclick="navigateTo('landing')">SmartOMR</a>
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" onclick="navigateTo('landing')">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="showPackages()">Packages</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="scrollToId('contact-section')">Contact</a></li>
-                    <li class="nav-item ms-3" id="nav-login-btn">
-                        <button class="btn btn-primary btn-sm rounded-pill px-4" onclick="navigateTo('auth')">Login / Signup</button>
+                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="navigateTo('landing')">Home</a></li>
+                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="showPackages()">Packages</a></li>
+                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="scrollToId('contact-section')">Contact</a></li>
+                    <li class="nav-item w-100 text-center mb-2" id="nav-login-btn">
+                        <button class="btn btn-primary btn-sm rounded-pill px-4 w-100" onclick="navigateTo('auth')">Login / Signup</button>
                     </li>
-                    <li class="nav-item ms-3 hidden" id="nav-dash-btn">
-                        <button class="btn btn-outline-primary btn-sm" onclick="navigateTo('dashboard')">Dashboard</button>
+                    <li class="nav-item w-100 text-center mb-2 hidden" id="nav-dash-btn">
+                        <button class="btn btn-outline-primary btn-sm w-100" onclick="navigateTo('dashboard')">Dashboard</button>
                     </li>
-                    <li class="nav-item ms-2 hidden" id="nav-logout-btn">
-                        <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+                    <li class="nav-item w-100 text-center hidden" id="nav-logout-btn">
+                        <button class="btn btn-outline-danger btn-sm w-100" onclick="logout()">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -88,7 +132,7 @@
 
     <div id="landing-view" class="view-section view-active">
         <section class="hero text-center">
-            <div class="container">
+            <div class="container px-4">
                 <h1 class="fw-bold display-4 mb-3">Professional OMR Grading</h1>
                 <p class="lead opacity-75 mb-4">Design Sheets. Scan with Phone. Get Results.</p>
                 <button class="btn btn-light text-primary fw-bold rounded-pill px-5" onclick="showPackages()">View Plans</button>
@@ -192,7 +236,7 @@
                     <div class="col-lg-8">
                         <div class="p-5 border rounded bg-white shadow-sm">
                             <h3 class="fw-bold text-center">Contact Us</h3>
-                            <div class="d-flex justify-content-center gap-3 my-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-center gap-3 my-4">
                                 <a href="https://wa.me/923181530761" target="_blank" class="btn btn-success"><i class="bi bi-whatsapp"></i> WhatsApp</a>
                                 <a href="mailto:studyappscontent@gmail.com" class="btn btn-dark"><i class="bi bi-envelope"></i> Email</a>
                             </div>
@@ -209,7 +253,7 @@
     </div>
 
     <div id="auth-view" class="view-section full-height">
-        <div class="d-flex justify-content-center align-items-center flex-grow-1">
+        <div class="d-flex justify-content-center align-items-center flex-grow-1 p-3">
             <div id="login-box" class="auth-card">
                 <h3 class="fw-bold text-center mb-3">Login</h3>
                 <div id="login-step-1">
@@ -254,13 +298,13 @@
 
     <div id="dashboard-view" class="view-section full-height">
         <div class="dash-container">
-            <div id="dash-warning" class="alert alert-warning hidden d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-clock-history me-2"></i> Plan expires in <span id="days-left" class="fw-bold"></span> days.</span>
-                <button class="btn btn-sm btn-warning fw-bold" onclick="openPlanModal()">Renew</button>
+            <div id="dash-warning" class="alert alert-warning hidden d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start">
+                <span class="mb-2 mb-md-0"><i class="bi bi-clock-history me-2"></i> Plan expires in <span id="days-left" class="fw-bold"></span> days.</span>
+                <button class="btn btn-sm btn-warning fw-bold w-100 w-md-auto" onclick="openPlanModal()">Renew</button>
             </div>
             
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold m-0">Account Overview</h4>
+                <h4 class="fw-bold m-0">Account</h4>
                 <select id="currency-select-dash" class="form-select form-select-sm shadow-sm" style="width:auto;" onchange="syncCurrency(this.value)">
                     <option value="PKR">PKR</option>
                     <option value="USD">USD</option>
@@ -271,12 +315,12 @@
             </div>
 
             <div class="account-card">
-                <div class="detail-row"><span class="text-muted">Email</span><span class="fw-bold" id="d-email">...</span></div>
+                <div class="detail-row"><span class="text-muted">Email</span><span class="fw-bold text-break" id="d-email">...</span></div>
                 <div class="detail-row"><span class="text-muted">Status</span><span id="d-status" class="fw-bold">...</span></div>
                 <div class="detail-row"><span class="text-muted">Current Plan</span><span class="fw-bold text-primary" id="d-plan">...</span></div>
                 <div class="detail-row">
                     <span class="text-muted">Dates</span>
-                    <span class="small">Start: <span id="d-curr" class="fw-bold">...</span> | Exp: <span id="d-exp" class="fw-bold text-danger">...</span></span>
+                    <span class="small text-end text-md-start">Start: <span id="d-curr" class="fw-bold">...</span><br>Exp: <span id="d-exp" class="fw-bold text-danger">...</span></span>
                 </div>
                 <div class="mt-3"><button id="action-btn" class="btn btn-primary w-100" onclick="openPlanModal()">Choose Plan</button></div>
             </div>
@@ -287,7 +331,7 @@
             </div>
         </div>
         <div id="tool-container" class="hidden bg-white position-fixed top-0 start-0 w-100 h-100" style="z-index:3000; padding-top:60px;">
-            <button class="btn btn-danger position-absolute top-0 end-0 m-3" onclick="closeTool()">Close</button>
+            <button class="btn btn-danger position-absolute top-0 end-0 m-3" style="z-index:3001;" onclick="closeTool()">Close</button>
             <iframe id="app-frame" style="width:100%; height:100%; border:none;"></iframe>
         </div>
     </div>
@@ -304,21 +348,21 @@
                     <div class="card p-3 text-center h-100">
                         <h5>Monthly</h5>
                         <h3 class="text-primary" id="m-price-monthly">500 PKR</h3>
-                        <button class="btn btn-outline-primary mt-3" onclick="showPayment('Monthly', 30, 500)">Select</button>
+                        <button class="btn btn-outline-primary mt-3 w-100" onclick="showPayment('Monthly', 30, 500)">Select</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card p-3 text-center h-100 border-primary">
                         <h5>Saver</h5>
                         <h3 class="text-primary" id="m-price-saver">2500 PKR</h3>
-                        <button class="btn btn-primary mt-3" onclick="showPayment('Saver', 180, 2500)">Select</button>
+                        <button class="btn btn-primary mt-3 w-100" onclick="showPayment('Saver', 180, 2500)">Select</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card p-3 text-center h-100">
                         <h5>Annual</h5>
                         <h3 class="text-primary" id="m-price-annual">5000 PKR</h3>
-                        <button class="btn btn-outline-primary mt-3" onclick="showPayment('Annual', 365, 5000)">Select</button>
+                        <button class="btn btn-outline-primary mt-3 w-100" onclick="showPayment('Annual', 365, 5000)">Select</button>
                     </div>
                 </div>
             </div>
@@ -327,24 +371,26 @@
                 <h5 class="text-danger fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Automatic Payment Suspended</h5>
                 
                 <div class="plan-preview">
-                    <strong>Plan Summary:</strong> <span id="sel-plan-name"></span> (+<span id="sel-plan-days"></span> days)<br>
-                    <span id="expiry-calc-msg" class="text-primary fw-bold mt-1 d-block"></span>
-                    <hr>
-                    <strong>Total:</strong> <span id="sel-plan-disp-price" class="fs-5"></span><br>
-                    <span class="text-muted small">(Base Price: <span id="sel-plan-base-price"></span> PKR)</span>
+                    <strong>Plan:</strong> <span id="sel-plan-name"></span> (+<span id="sel-plan-days"></span> days)<br>
+                    <span id="expiry-calc-msg" class="text-primary fw-bold mt-1 d-block small"></span>
+                    <hr class="my-2">
+                    <strong>Total:</strong> <span id="sel-plan-disp-price" class="fs-5"></span>
+                    <span class="text-muted small d-block">(Base: <span id="sel-plan-base-price"></span> PKR)</span>
                 </div>
 
                 <div class="alert alert-info text-center border-info">
-                    <h6 class="fw-bold mb-3">Manual Upgrade Required</h6>
+                    <h6 class="fw-bold mb-2">Manual Upgrade Required</h6>
                     <p class="mb-3 text-muted small">Automatic payments are currently under maintenance. To activate your plan, please contact our support directly via WhatsApp.</p>
                     
                     <a id="whatsapp-link" href="#" target="_blank" class="btn btn-success w-100 py-3 fw-bold shadow-sm">
-                        <i class="bi bi-whatsapp fs-5 me-2"></i> Chat on WhatsApp (+92 318 1530761)
+                        <i class="bi bi-whatsapp fs-5 me-2"></i> Chat on WhatsApp
                     </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // ===========================================
@@ -419,14 +465,35 @@
         function navigateTo(v) {
             document.querySelectorAll('.view-section').forEach(e=>e.classList.remove('view-active'));
             document.getElementById(v+'-view').classList.add('view-active');
+            
+            // Close mobile navbar if open
+            const nav = document.getElementById('navbarNav');
+            if(nav.classList.contains('show')) {
+                const bsCollapse = new bootstrap.Collapse(nav);
+                bsCollapse.hide();
+            }
+
             if(v==='auth') showLogin();
         }
 
         function updateNav() {
             const isLog = !!curEmail;
-            document.getElementById('nav-login-btn').classList.toggle('hidden', isLog);
-            document.getElementById('nav-dash-btn').classList.toggle('hidden', !isLog);
-            document.getElementById('nav-logout-btn').classList.toggle('hidden', !isLog);
+            const els = ['nav-login-btn', 'nav-dash-btn', 'nav-logout-btn'];
+            
+            // On mobile, these IDs might need cleaner toggle handling
+            const logBtn = document.getElementById('nav-login-btn');
+            const dashBtn = document.getElementById('nav-dash-btn');
+            const outBtn = document.getElementById('nav-logout-btn');
+
+            if(isLog) {
+                logBtn.classList.add('hidden');
+                dashBtn.classList.remove('hidden');
+                outBtn.classList.remove('hidden');
+            } else {
+                logBtn.classList.remove('hidden');
+                dashBtn.classList.add('hidden');
+                outBtn.classList.add('hidden');
+            }
         }
         
         function showPackages() { navigateTo('landing'); setTimeout(()=>document.getElementById('packages-section').scrollIntoView({behavior:'smooth'}),100); }
@@ -605,8 +672,6 @@
             calcMsg += `New Valid Till: ${newDateStr}`;
             document.getElementById('expiry-calc-msg').innerText = calcMsg;
         }
-
-        // processPayment function removed as per instruction
 
         function logout() { 
             localStorage.removeItem('omr_user'); 
