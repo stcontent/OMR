@@ -3,152 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMR Tools Dashboard</title>
+    <title>Smart OMR System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #f3f4f6;
         }
-
-        /* Header Section */
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        h1 {
-            margin: 0 0 15px 0;
-            font-size: 24px;
-        }
-
-        /* Button Navigation */
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        button {
-            padding: 10px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            font-weight: bold;
-            color: white;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-maker {
-            background-color: #27ae60; /* Green */
-        }
-        .btn-maker:hover {
-            background-color: #219150;
-        }
-
-        .btn-checker {
-            background-color: #2980b9; /* Blue */
-        }
-        .btn-checker:hover {
-            background-color: #20638f;
-        }
-
-        /* Main Content Area */
-        .main-container {
-            flex-grow: 1;
-            position: relative;
-            width: 100%;
-            background-color: white;
-        }
-
         iframe {
-            width: 100%;
-            height: 100%;
+            display: block;
+            width: 100vw;
+            height: 100vh;
             border: none;
-            display: none; /* Hidden until clicked */
         }
-
-        .placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #7f8c8d;
-        }
-
-        /* Loading Indicator */
+        /* Loading animation */
         .loader {
-            display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 18px;
-            color: #333;
+            z-index: -1; /* Behind the iframe */
+            text-align: center;
+            color: #6b7280;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>OMR System Dashboard</h1>
-        <div class="nav-buttons">
-            <button class="btn-maker" onclick="loadScript('https://script.google.com/macros/s/AKfycbxXnCcIvi1umr1ufBWOinOHYZmDa2pBc2NVDkCL2yWjHRfgJ7o3vcv1BZgM_g2kxLPDzQ/exec')">
-                📝 OMR Maker
-            </button>
-
-            <button class="btn-checker" onclick="loadScript('https://script.google.com/macros/s/AKfycbwYho6p7ALaGyPJ1aR8xsu6UZdWO_TAHHOijzUwENmR5Q1xJLj9Q9yqsF1TNR8ujmivmQ/exec')">
-                ✅ OMR Checker
-            </button>
-        </div>
+    <!-- Loading State (visible while iframe loads or if it's transparent) -->
+    <div class="loader">
+        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-sm font-medium">Loading Script...</p>
     </div>
 
-    <div class="main-container">
-        <div class="loader" id="loader">Loading Tool...</div>
-        
-        <div class="placeholder" id="placeholder">
-            <h2>Select a tool from above to begin</h2>
-            <p>Choose Maker to create sheets or Checker to grade them.</p>
-        </div>
+    <!-- The Script -->
+    <iframe 
+        src="https://script.google.com/macros/s/AKfycbwUNtl-5F9_6wffMLFYASaQ7FDhIqtjMEZIopIB5OgDSg7Wb4xjduz1Y8DOW_p3vlJsrQ/exec"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    ></iframe>
 
-        <iframe id="appFrame" src=""></iframe>
-    </div>
-
-    <script>
-        function loadScript(url) {
-            const frame = document.getElementById('appFrame');
-            const placeholder = document.getElementById('placeholder');
-            const loader = document.getElementById('loader');
-
-            // Show loader, hide placeholder and frame temporarily
-            placeholder.style.display = 'none';
-            frame.style.display = 'none';
-            loader.style.display = 'block';
-
-            // Set the source
-            frame.src = url;
-
-            // When the iframe finishes loading, show it and hide loader
-            frame.onload = function() {
-                loader.style.display = 'none';
-                frame.style.display = 'block';
-            };
-        }
-    </script>
+    <!-- Fallback Button (In case Google blocks the iframe) -->
+    <a href="https://script.google.com/macros/s/AKfycbwUNtl-5F9_6wffMLFYASaQ7FDhIqtjMEZIopIB5OgDSg7Wb4xjduz1Y8DOW_p3vlJsrQ/exec" 
+       target="_blank"
+       class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 z-50 flex items-center justify-center"
+       title="Open in new tab (Use this if screen is blank)">
+        <i class="fas fa-external-link-alt"></i>
+    </a>
+    
+    <!-- Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </body>
 </html>
