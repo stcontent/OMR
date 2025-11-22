@@ -20,43 +20,50 @@
         .full-height.view-active { display: flex; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* NAVBAR */
-        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 70px; z-index: 1050; }
+        /* NAVBAR - FIXED FOR MOBILE */
+        .navbar { 
+            background: white; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            height: auto; /* Allow height to expand on mobile */
+            min-height: 70px;
+            z-index: 1050; 
+        }
         .navbar-brand { font-weight: 800; color: var(--primary) !important; cursor: pointer; }
-        .nav-link { cursor: pointer; font-weight: 500; }
+        .nav-link { cursor: pointer; font-weight: 500; color: #333; }
+        .nav-link:hover { color: var(--primary); }
 
         /* TOAST */
         #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
-        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; }
+        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
 
         /* HERO */
         .hero { background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; padding: 80px 0; margin-bottom: 40px; }
         
-        /* AUTH CARDS - UPDATED FOR MOBILE */
+        /* AUTH CARDS */
         .auth-card { 
             background: white; 
             width: 100%; 
-            max-width: 400px; /* Keeps it nice on desktop, shrinks on mobile */
+            max-width: 400px; 
             padding: 30px; 
-            border-radius: 12px; 
+            border-radius: 8px; /* Rectangular-ish */
             box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
             margin: 20px auto; 
         }
         canvas { background: #f1f3f4; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; max-width: 100%; }
 
-        /* DASHBOARD - UPDATED FOR MOBILE */
+        /* DASHBOARD */
         .dash-container { max-width: 1000px; margin: 20px auto; padding: 15px; }
-        .account-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .account-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
-        .status-active { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
-        .status-inactive { background: #ffebee; color: #c62828; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; }
+        .status-active { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
+        .status-inactive { background: #ffebee; color: #c62828; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
         
-        /* TOOLS - UPDATED FOR MOBILE */
+        /* TOOLS */
         .tool-btn { 
             width: 180px; 
             padding: 25px; 
             border: none; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             background: white; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
             transition: 0.3s; 
@@ -65,34 +72,37 @@
 
         /* MODAL */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 15px; }
-        .modal-custom { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .modal-custom { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
         
-        .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; }
+        .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
         
         /* Loader Overlay */
         #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
 
         /* --- MOBILE SPECIFIC FIXES --- */
-        @media (max-width: 768px) {
+        @media (max-width: 991px) { /* Trigger mobile view sooner */
             .hero { padding: 50px 0; }
             .hero h1 { font-size: 2.5rem; }
             
-            /* Stack dashboard details vertically on small screens */
+            /* Navbar Mobile Styling */
+            .navbar-collapse { 
+                background: white; 
+                padding: 15px; 
+                border-top: 1px solid #eee;
+                margin-top: 10px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+            }
+            
+            .nav-item { margin-bottom: 10px; }
+            
             .detail-row { flex-direction: column; align-items: flex-start; gap: 5px; }
             .detail-row span:last-child { font-weight: 600; }
             
-            /* Make buttons full width on mobile */
             .tool-btn { width: 100%; margin-bottom: 10px; }
             .d-flex.gap-4 { gap: 10px !important; }
             
-            /* Adjust Modal */
             .modal-custom { padding: 15px; max-height: 95vh; }
-            
-            /* Auth page alignment */
             .full-height { justify-content: start; padding-top: 20px; }
-            
-            /* Navbar padding */
-            .navbar-collapse { background: white; padding: 15px; border-radius: 0 0 10px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 1px solid #eee; }
         }
     </style>
 </head>
@@ -105,25 +115,29 @@
         <p class="mt-2 fw-bold text-muted">Processing...</p>
     </div>
 
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
         <div class="container">
             <a class="navbar-brand" onclick="navigateTo('landing')">SmartOMR</a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="navigateTo('landing')">Home</a></li>
-                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="showPackages()">Packages</a></li>
-                    <li class="nav-item w-100 text-center mb-2"><a class="nav-link" onclick="scrollToId('contact-section')">Contact</a></li>
-                    <li class="nav-item w-100 text-center mb-2" id="nav-login-btn">
-                        <button class="btn btn-primary btn-sm rounded-pill px-4 w-100" onclick="navigateTo('auth')">Login / Signup</button>
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="navigateTo('landing')">Home</a></li>
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="showPackages()">Packages</a></li>
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="scrollToId('contact-section')">Contact</a></li>
+                    
+                    <li class="nav-item ms-lg-3 w-100 text-center" id="nav-login-btn">
+                        <button class="btn btn-primary btn-sm px-4 w-100 w-lg-auto" onclick="navigateTo('auth')">Login / Signup</button>
                     </li>
-                    <li class="nav-item w-100 text-center mb-2 hidden" id="nav-dash-btn">
-                        <button class="btn btn-outline-primary btn-sm w-100" onclick="navigateTo('dashboard')">Dashboard</button>
+                    
+                    <li class="nav-item ms-lg-3 w-100 text-center hidden" id="nav-dash-btn">
+                        <button class="btn btn-outline-primary btn-sm w-100 w-lg-auto" onclick="navigateTo('dashboard')">Dashboard</button>
                     </li>
-                    <li class="nav-item w-100 text-center hidden" id="nav-logout-btn">
-                        <button class="btn btn-outline-danger btn-sm w-100" onclick="logout()">Logout</button>
+                    <li class="nav-item ms-lg-2 w-100 text-center hidden" id="nav-logout-btn">
+                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="logout()">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -135,7 +149,7 @@
             <div class="container px-4">
                 <h1 class="fw-bold display-4 mb-3">Professional OMR Grading</h1>
                 <p class="lead opacity-75 mb-4">Design Sheets. Scan with Phone. Get Results.</p>
-                <button class="btn btn-light text-primary fw-bold rounded-pill px-5" onclick="showPackages()">View Plans</button>
+                <button class="btn btn-light text-primary fw-bold px-5" onclick="showPackages()">View Plans</button>
             </div>
         </section>
 
@@ -478,9 +492,6 @@
 
         function updateNav() {
             const isLog = !!curEmail;
-            const els = ['nav-login-btn', 'nav-dash-btn', 'nav-logout-btn'];
-            
-            // On mobile, these IDs might need cleaner toggle handling
             const logBtn = document.getElementById('nav-login-btn');
             const dashBtn = document.getElementById('nav-dash-btn');
             const outBtn = document.getElementById('nav-logout-btn');
