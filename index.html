@@ -20,11 +20,10 @@
         .full-height.view-active { display: flex; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* NAVBAR - FIXED FOR MOBILE */
+        /* NAVBAR STYLING */
         .navbar { 
             background: white; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-            height: auto; /* Allow height to expand on mobile */
             min-height: 70px;
             z-index: 1050; 
         }
@@ -32,9 +31,9 @@
         .nav-link { cursor: pointer; font-weight: 500; color: #333; }
         .nav-link:hover { color: var(--primary); }
 
-        /* TOAST */
-        #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
-        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
+        /* FORCE HAMBURGER ICON VISIBILITY */
+        .navbar-toggler { border-color: rgba(0,0,0,0.1); }
+        .navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important; }
 
         /* HERO */
         .hero { background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; padding: 80px 0; margin-bottom: 40px; }
@@ -45,63 +44,59 @@
             width: 100%; 
             max-width: 400px; 
             padding: 30px; 
-            border-radius: 8px; /* Rectangular-ish */
+            border-radius: 8px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
             margin: 20px auto; 
         }
         canvas { background: #f1f3f4; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; max-width: 100%; }
 
-        /* DASHBOARD */
+        /* DASHBOARD & TOOLS */
         .dash-container { max-width: 1000px; margin: 20px auto; padding: 15px; }
         .account-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
         .status-active { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
         .status-inactive { background: #ffebee; color: #c62828; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
         
-        /* TOOLS */
-        .tool-btn { 
-            width: 180px; 
-            padding: 25px; 
-            border: none; 
-            border-radius: 8px; 
-            background: white; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            transition: 0.3s; 
-        }
+        .tool-btn { width: 180px; padding: 25px; border: none; border-radius: 8px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; }
         .tool-btn:hover { transform: translateY(-5px); }
 
         /* MODAL */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 15px; }
         .modal-custom { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
-        
         .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
         
-        /* Loader Overlay */
+        /* TOAST & LOADER */
+        #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
+        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
         #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
 
-        /* --- MOBILE SPECIFIC FIXES --- */
-        @media (max-width: 991px) { /* Trigger mobile view sooner */
+        /* --- MOBILE MENU STYLING --- */
+        @media (max-width: 991px) {
             .hero { padding: 50px 0; }
             .hero h1 { font-size: 2.5rem; }
             
-            /* Navbar Mobile Styling */
-            .navbar-collapse { 
-                background: white; 
-                padding: 15px; 
+            /* IMPORTANT: Makes the menu background white and readable when opened */
+            .navbar-collapse {
+                background: white;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                padding: 20px;
                 border-top: 1px solid #eee;
-                margin-top: 10px;
-                box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             }
-            
-            .nav-item { margin-bottom: 10px; }
+
+            .nav-item { 
+                margin-bottom: 15px; 
+                border-bottom: 1px solid #f8f9fa;
+                padding-bottom: 10px;
+            }
+            .nav-item:last-child { border-bottom: none; }
             
             .detail-row { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .detail-row span:last-child { font-weight: 600; }
-            
             .tool-btn { width: 100%; margin-bottom: 10px; }
             .d-flex.gap-4 { gap: 10px !important; }
-            
-            .modal-custom { padding: 15px; max-height: 95vh; }
             .full-height { justify-content: start; padding-top: 20px; }
         }
     </style>
@@ -109,7 +104,6 @@
 <body>
 
     <div id="toast-box"></div>
-    
     <div id="global-loader">
         <div class="spinner-border text-primary" role="status"></div>
         <p class="mt-2 fw-bold text-muted">Processing...</p>
