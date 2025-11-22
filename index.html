@@ -401,8 +401,8 @@
             document.getElementById('nav-logout-btn').classList.toggle('hidden', !isLog);
         }
         
-        function showPackages() { navigateTo('landing'); setTimeout(()=>document.getElementById('packages-section').scrollIntoView({behavior:'smooth'}),100); }
-        function scrollToId(id) { navigateTo('landing'); setTimeout()=>document.getElementById(id).scrollIntoView({behavior:'smooth'}),100); }
+        function showPackages() { navigateTo('landing'); setTimeout()=>document.getElementById('packages-section').scrollIntoView({behavior:'smooth'}),100; }
+        function scrollToId(id) { navigateTo('landing'); setTimeout()=>document.getElementById(id).scrollIntoView({behavior:'smooth'}),100; }
 
         function handlePlanClick(name, days, pkrPrice) {
             if(curEmail) { navigateTo('dashboard'); openPlanModal(); }
