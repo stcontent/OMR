@@ -113,7 +113,7 @@
                         </div>
                     </div>
                     
-                    div class="d-flex">
+                    <div class="d-flex">
                         <div class="me-3"><i class="bi bi-qr-code-scan fs-3 text-success"></i></div>
                         <div>
                             <h5 class="fw-bold">OMR Checker</h5>
@@ -145,16 +145,6 @@
             <div class="container">
                 <div class="text-center mb-4">
                     <h2 class="fw-bold">Plans</h2>
-                    <div class="d-inline-block mt-2">
-                        <select id="currency-select-landing" class="form-select form-select-sm" style="width:auto; min-width: 200px;" onchange="syncCurrency(this.value)">
-                            <option value="PKR">PKR - Pakistani Rupee</option>
-                            <option value="USD">USD - US Dollar</option>
-                            <option value="INR">INR - Indian Rupee</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                        </select>
-                        <div id="rate-loader" class="small text-muted mt-1" style="font-size: 0.8rem;">Loading live rates...</div>
-                    </div>
                 </div>
                 <div class="row g-4 justify-content-center">
                     <div class="col-md-4">
@@ -261,13 +251,6 @@
             
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="fw-bold m-0">Account Overview</h4>
-                <select id="currency-select-dash" class="form-select form-select-sm shadow-sm" style="width:auto;" onchange="syncCurrency(this.value)">
-                    <option value="PKR">PKR</option>
-                    <option value="USD">USD</option>
-                    <option value="INR">INR</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                </select>
             </div>
 
             <div class="account-card">
@@ -335,11 +318,17 @@
                 </div>
 
                 <div class="row g-2">
-                    <div class="col-12"><input type="text" class="form-control" placeholder="Card Number"></div>
-                    <div class="col-6"><input type="text" class="form-control" placeholder="MM/YY"></div>
-                    <div class="col-6"><input type="text" class="form-control" placeholder="CVC"></div>
+                    <div class="col-12">
+                        <p class="text-center">
+                            Please send the payment to the following EasyPaisa account:
+                            <br>
+                            <strong>Account Number:</strong> 03440544791
+                            <br>
+                            <strong>Name:</strong> Muhammad Haroon
+                        </p>
+                    </div>
                 </div>
-                <button class="btn btn-success w-100 mt-3" onclick="processPayment()">Pay & Activate</button>
+                <button class="btn btn-success w-100 mt-3" onclick="processPayment()">Confirm Payment</button>
             </div>
         </div>
     </div>
@@ -355,15 +344,14 @@
         let curStatus = 'Inactive';
         let curExpDate = null; 
         let selPlan = {};
-        let rates = { 'PKR': 1, 'USD': 0.0036, 'INR': 0.30, 'EUR': 0.0033, 'GBP': 0.0028 };
-        const symbols = { 'PKR': 'Rs', 'USD': '$', 'INR': '₹', 'EUR': '€', 'GBP': '£' };
+        const rates = { 'PKR': 1 };
+        const symbols = { 'PKR': 'Rs' };
         let activeCurrency = 'PKR';
 
         window.onload = function() {
             const u = localStorage.getItem('omr_user');
             if(u) { curEmail = u; loadData(); }
             updateNav();
-            fetchLiveRates(); 
         };
 
         // --- API HELPER ---
@@ -376,7 +364,6 @@
             
             const bodyData = { action: action, ...payload };
             try {
-                // Using 'no-cors' is tricky, standard fetch usually works if GAS serves JSON correctly
                 const response = await fetch(SCRIPT_URL, {
                     method: "POST",
                     body: JSON.stringify(bodyData)
@@ -392,20 +379,6 @@
                 toast("Connection Error: " + e.message);
                 throw e;
             }
-        }
-
-        function fetchLiveRates() {
-            fetch('https://api.exchangerate-api.com/v4/latest/PKR')
-                .then(response => response.json())
-                .then(data => {
-                    rates['USD'] = data.rates.USD;
-                    rates['INR'] = data.rates.INR;
-                    rates['EUR'] = data.rates.EUR;
-                    rates['GBP'] = data.rates.GBP;
-                    const ld = document.getElementById('rate-loader');
-                    if(ld) { ld.innerText = "Live rates updated"; ld.classList.add('text-success'); }
-                    updateCurrency(); 
-                }).catch(err => console.error(err));
         }
 
         function toast(m) {
@@ -429,32 +402,7 @@
         }
         
         function showPackages() { navigateTo('landing'); setTimeout(()=>document.getElementById('packages-section').scrollIntoView({behavior:'smooth'}),100); }
-        function scrollToId(id) { navigateTo('landing'); setTimeout(()=>document.getElementById(id).scrollIntoView({behavior:'smooth'}),100); }
-
-        function syncCurrency(val) {
-            activeCurrency = val;
-            const lSelect = document.getElementById('currency-select-landing');
-            const dSelect = document.getElementById('currency-select-dash');
-            if(lSelect) lSelect.value = val;
-            if(dSelect) dSelect.value = val;
-            updateCurrency();
-        }
-
-        function updateCurrency() {
-            const r = rates[activeCurrency];
-            const s = symbols[activeCurrency];
-            const setPrice = (id, base) => {
-                const val = (base * r).toFixed(activeCurrency==='PKR'?0:2);
-                const els = document.querySelectorAll(id);
-                els.forEach(el => el.innerText = `${s} ${val}`);
-            };
-            setPrice('#p-price-monthly', 500);
-            setPrice('#p-price-saver', 2500);
-            setPrice('#p-price-annual', 5000);
-            setPrice('#m-price-monthly', 500);
-            setPrice('#m-price-saver', 2500);
-            setPrice('#m-price-annual', 5000);
-        }
+        function scrollToId(id) { navigateTo('landing'); setTimeout()=>document.getElementById(id).scrollIntoView({behavior:'smooth'}),100); }
 
         function handlePlanClick(name, days, pkrPrice) {
             if(curEmail) { navigateTo('dashboard'); openPlanModal(); }
@@ -543,7 +491,6 @@
             callApi('getAccountDetails', {email: curEmail}).then(d => {
                 if(d.status==='Active') {
                     document.getElementById('tool-container').classList.remove('hidden');
-                    // Get Tool URL from API
                     callApi('getToolUrl', {toolName: t}).then(u => {
                         document.getElementById('app-frame').src = u;
                     });
@@ -571,7 +518,6 @@
         function openPlanModal() { 
             document.getElementById('plan-modal').style.display='flex'; 
             document.getElementById('payment-form').classList.add('hidden'); 
-            updateCurrency(); 
         }
         function closePlanModal() { document.getElementById('plan-modal').style.display='none'; }
         
