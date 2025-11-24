@@ -10,11 +10,11 @@
 
     <style>
         :root { --primary: #0d47a1; --bg: #f8f9fa; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); padding-top: 70px; min-height: 100vh; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); padding-top: 70px; min-height: 100vh; display: flex; flex-direction: column; }
         
         /* UTILS */
         .hidden { display: none !important; }
-        .view-section { display: none; animation: fade 0.3s; }
+        .view-section { display: none; animation: fade 0.3s; flex: 1; }
         .view-active { display: block; }
         .full-height { min-height: calc(100vh - 70px); display: none; flex-direction: column; }
         .full-height.view-active { display: flex; }
@@ -69,6 +69,17 @@
         #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
         .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
         #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
+        
+        /* FOOTER */
+        footer { background: white; padding: 20px 0; border-top: 1px solid #eee; margin-top: auto; }
+        footer a { color: #666; text-decoration: none; font-size: 0.9rem; }
+        footer a:hover { color: var(--primary); }
+
+        /* PRIVACY POLICY */
+        .policy-container { max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+        .policy-container h2 { color: var(--primary); font-weight: 700; margin-bottom: 20px; }
+        .policy-container h4 { margin-top: 20px; font-size: 1.1rem; font-weight: 600; }
+        .policy-container p { color: #555; line-height: 1.6; font-size: 0.95rem; }
 
         /* --- MOBILE MENU STYLING --- */
         @media (max-width: 991px) {
@@ -328,6 +339,59 @@
         </div>
     </div>
 
+    <div id="policy-view" class="view-section">
+        <div class="container">
+            <div class="policy-container">
+                <h2 class="text-center">Privacy Policy</h2>
+                <p class="text-center text-muted mb-4">Last Updated: October 2023</p>
+
+                <h4>1. Introduction</h4>
+                <p>Welcome to Smart OMR System. We respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, and safeguard your data when you use our website and OMR tools.</p>
+
+                <h4>2. Information We Collect</h4>
+                <p>We only collect the information necessary to provide our services:</p>
+                <ul>
+                    <li><strong>Account Information:</strong> We collect your email address when you sign up to create a unique user identity and manage your subscription plan.</li>
+                    <li><strong>Usage Data:</strong> We may collect anonymous data regarding how our tools (OMR Maker and Checker) are used to improve performance.</li>
+                    <li><strong>OMR Data:</strong> While you use the OMR Checker, the processing happens within the application session. We do not permanently store your scanned student answer sheets on our public servers unless explicitly saved by you for reporting purposes.</li>
+                </ul>
+
+                <h4>3. How We Use Your Information</h4>
+                <p>Your data is used solely for:</p>
+                <ul>
+                    <li>Authentication and account management.</li>
+                    <li>Processing your subscription plans (Monthly, Saver, Annual).</li>
+                    <li>Sending critical account notifications (e.g., OTP codes, expiry warnings).</li>
+                    <li>Responding to your support inquiries via the contact form.</li>
+                </ul>
+
+                <h4>4. Data Security</h4>
+                <p>We implement standard security measures to protect your email and session data. We do not sell, trade, or rent your personal identification information to others.</p>
+
+                <h4>5. Third-Party Services</h4>
+                <p>Our application may use third-party APIs (such as Google Scripts for backend processing) to function. These providers are obligated to protect your data according to their own strict privacy policies.</p>
+
+                <h4>6. Contact Us</h4>
+                <p>If you have questions about this Privacy Policy, please contact us via the "Contact" section on our homepage or email us at <strong>studyappscontent@gmail.com</strong>.</p>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" onclick="navigateTo('landing')">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p class="mb-1 text-muted">&copy; 2023 Smart OMR System. All rights reserved.</p>
+            <div>
+                <a href="javascript:void(0)" onclick="navigateTo('policy')">Privacy Policy</a>
+                <span class="mx-2 text-muted">|</span>
+                <a href="javascript:void(0)" onclick="scrollToId('contact-section')">Support</a>
+            </div>
+        </div>
+    </footer>
+
     <div id="plan-modal" class="overlay">
         <div class="modal-custom">
             <div class="d-flex justify-content-between mb-4">
@@ -445,6 +509,9 @@
             document.querySelectorAll('.view-section').forEach(e=>e.classList.remove('view-active'));
             document.getElementById(v+'-view').classList.add('view-active');
             
+            // Scroll to top
+            window.scrollTo(0,0);
+
             // Close mobile navbar if open
             const nav = document.getElementById('navbarNav');
             if(nav.classList.contains('show')) {
