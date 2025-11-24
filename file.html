@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart OMR System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary: #0d47a1; --bg: #f8f9fa; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); padding-top: 70px; min-height: 100vh; }
+        
+        /* UTILS */
+        .hidden { display: none !important; }
+        .view-section { display: none; animation: fade 0.3s; }
+        .view-active { display: block; }
+        .full-height { min-height: calc(100vh - 70px); display: none; flex-direction: column; }
+        .full-height.view-active { display: flex; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* NAVBAR STYLING */
+        .navbar { 
+            background: white; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            min-height: 70px;
+            z-index: 1050; 
+        }
+        .navbar-brand { font-weight: 800; color: var(--primary) !important; cursor: pointer; }
+        .nav-link { cursor: pointer; font-weight: 500; color: #333; }
+        .nav-link:hover { color: var(--primary); }
+
+        /* FORCE HAMBURGER ICON VISIBILITY */
+        .navbar-toggler { border-color: rgba(0,0,0,0.1); }
+        .navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 0.55)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important; }
+
+        /* HERO */
+        .hero { background: linear-gradient(135deg, #0d47a1, #1565c0); color: white; padding: 80px 0; margin-bottom: 40px; }
+        
+        /* AUTH CARDS */
+        .auth-card { 
+            background: white; 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            margin: 20px auto; 
+        }
+        canvas { background: #f1f3f4; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; max-width: 100%; }
+
+        /* DASHBOARD & TOOLS */
+        .dash-container { max-width: 1000px; margin: 20px auto; padding: 15px; }
+        .account-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .detail-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 12px 0; align-items: center; }
+        .status-active { background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
+        .status-inactive { background: #ffebee; color: #c62828; padding: 2px 10px; border-radius: 4px; font-size: 0.8rem; }
+        
+        .tool-btn { width: 180px; padding: 25px; border: none; border-radius: 8px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; }
+        .tool-btn:hover { transform: translateY(-5px); }
+
+        /* MODAL */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 15px; }
+        .modal-custom { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
+        
+        /* TOAST & LOADER */
+        #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
+        .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
+        #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
+
+        /* --- MOBILE MENU STYLING --- */
+        @media (max-width: 991px) {
+            .hero { padding: 50px 0; }
+            .hero h1 { font-size: 2.5rem; }
+            
+            /* IMPORTANT: Makes the menu background white and readable when opened */
+            .navbar-collapse {
+                background: white;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                border-top: 1px solid #eee;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .nav-item { 
+                margin-bottom: 15px; 
+                border-bottom: 1px solid #f8f9fa;
+                padding-bottom: 10px;
+            }
+            .nav-item:last-child { border-bottom: none; }
+            
+            .detail-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .tool-btn { width: 100%; margin-bottom: 10px; }
+            .d-flex.gap-4 { gap: 10px !important; }
+            .full-height { justify-content: start; padding-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast-box"></div>
+    <div id="global-loader">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 fw-bold text-muted">Processing...</p>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+        <div class="container">
+            <a class="navbar-brand" onclick="navigateTo('landing')">SmartOMR</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="navigateTo('landing')">Home</a></li>
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="showPackages()">Packages</a></li>
+                    <li class="nav-item w-100 text-center text-lg-start"><a class="nav-link" onclick="scrollToId('contact-section')">Contact</a></li>
+                    
+                    <li class="nav-item ms-lg-3 w-100 text-center" id="nav-login-btn">
+                        <button class="btn btn-primary btn-sm px-4 w-100 w-lg-auto" onclick="navigateTo('auth')">Login / Signup</button>
+                    </li>
+                    
+                    <li class="nav-item ms-lg-3 w-100 text-center hidden" id="nav-dash-btn">
+                        <button class="btn btn-outline-primary btn-sm w-100 w-lg-auto" onclick="navigateTo('dashboard')">Dashboard</button>
+                    </li>
+                    <li class="nav-item ms-lg-2 w-100 text-center hidden" id="nav-logout-btn">
+                        <button class="btn btn-outline-danger btn-sm w-100 w-lg-auto" onclick="logout()">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="landing-view" class="view-section view-active">
+        <section class="hero text-center">
+            <div class="container px-4">
+                <h1 class="fw-bold display-4 mb-3">Professional OMR Grading</h1>
+                <p class="lead opacity-75 mb-4">Design Sheets. Scan with Phone. Get Results.</p>
+                <button class="btn btn-light text-primary fw-bold px-5" onclick="showPackages()">View Plans</button>
+            </div>
+        </section>
+
+        <section id="detail-section" class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6">
+                    <h6 class="text-primary fw-bold text-uppercase">Features</h6>
+                    <h2 class="fw-bold mb-4">Integrated OMR Suite</h2>
+                    
+                    <div class="d-flex mb-4">
+                        <div class="me-3"><i class="bi bi-file-earmark-pdf-fill fs-3 text-danger"></i></div>
+                        <div>
+                            <h5 class="fw-bold">OMR Maker</h5>
+                            <p class="small text-muted">
+                                Design standardized answer sheets optimized for automated grading. 
+                                Configure up to 100 questions with flexible bubble layouts. 
+                                Generates high-precision A4 PDFs that align perfectly with our scanning algorithm, ensuring 100% accurate mark recognition.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex">
+                        <div class="me-3"><i class="bi bi-qr-code-scan fs-3 text-success"></i></div>
+                        <div>
+                            <h5 class="fw-bold">OMR Checker</h5>
+                            <p class="small text-muted">
+                                Transform your webcam or smartphone into an advanced grading scanner. 
+                                Our AI engine handles paper tilt, ignores cross-outs, and instantly evaluates student performance. 
+                                Auto-calculates scores and generates detailed result analytics in seconds.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-4 border rounded bg-white text-center shadow-sm">
+                        <h5>How it works</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between text-center mt-4">
+                            <div><i class="bi bi-pencil-square fs-2 text-primary"></i><br><small>Signup</small></div>
+                            <div><i class="bi bi-credit-card fs-2 text-primary"></i><br><small>Plan</small></div>
+                            <div><i class="bi bi-printer fs-2 text-primary"></i><br><small>Print</small></div>
+                            <div><i class="bi bi-camera fs-2 text-primary"></i><br><small>Scan</small></div>
+                            <div><i class="bi bi-clipboard-data fs-2 text-primary"></i><br><small>Result</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="packages-section" class="bg-light py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Plans</h2>
+                    <div class="d-inline-block mt-2">
+                        <select id="currency-select-landing" class="form-select form-select-sm" style="width:auto; min-width: 200px;" onchange="syncCurrency(this.value)">
+                            <option value="PKR">PKR - Pakistani Rupee</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="INR">INR - Indian Rupee</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                        </select>
+                        <div id="rate-loader" class="small text-muted mt-1" style="font-size: 0.8rem;">Loading live rates...</div>
+                    </div>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="card p-4 text-center h-100 border-0 shadow-sm opacity-75">
+                            <h4>Monthly</h4>
+                            <h2 class="text-primary my-3" id="p-price-monthly">500 PKR</h2>
+                            <p class="text-muted">30 Days</p>
+                            <button class="btn btn-secondary w-100" disabled>Unavailable</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-4 text-center h-100 border-0 shadow-sm opacity-75">
+                            <div class="badge bg-secondary mb-2 mx-auto">Closed</div>
+                            <h4>Saver</h4>
+                            <h2 class="text-primary my-3" id="p-price-saver">2500 PKR</h2>
+                            <p class="text-muted">180 Days</p>
+                            <button class="btn btn-secondary w-100" disabled>Unavailable</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-4 text-center h-100 border-primary shadow">
+                            <div class="badge bg-primary mb-2 mx-auto">Best Value</div>
+                            <h4>Annual</h4>
+                            <h2 class="text-primary my-3" id="p-price-annual">5000 PKR</h2>
+                            <p class="text-muted">365 Days</p>
+                            <button class="btn btn-primary w-100" onclick="handlePlanClick('Annual', 365, 5000)">Select</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-section" class="py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="p-5 border rounded bg-white shadow-sm">
+                            <h3 class="fw-bold text-center">Contact Us</h3>
+                            <div class="d-flex flex-column flex-md-row justify-content-center gap-3 my-4">
+                                <a href="https://wa.me/923181530761" target="_blank" class="btn btn-success"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                                <a href="mailto:studyappscontent@gmail.com" class="btn btn-dark"><i class="bi bi-envelope"></i> Email</a>
+                            </div>
+                            <h6 class="fw-bold">Send Message</h6>
+                            <input type="text" id="c-name" class="form-control mb-2" placeholder="Name">
+                            <input type="email" id="c-email" class="form-control mb-2" placeholder="Email">
+                            <textarea id="c-msg" class="form-control mb-2" rows="3" placeholder="Message"></textarea>
+                            <button class="btn btn-dark w-100" onclick="sendContact()">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="auth-view" class="view-section full-height">
+        <div class="d-flex justify-content-center align-items-center flex-grow-1 p-3">
+            <div id="login-box" class="auth-card">
+                <h3 class="fw-bold text-center mb-3">Login</h3>
+                <div id="login-step-1">
+                    <input type="email" id="login-email" class="form-control mb-3" placeholder="Email Address">
+                    <div class="d-flex justify-content-between mb-2">
+                        <canvas id="login-captcha-cvs" width="150" height="40"></canvas>
+                        <button class="btn btn-sm btn-light" onclick="genCap('login')">↻</button>
+                    </div>
+                    <input type="text" id="login-captcha-inp" class="form-control mb-3" placeholder="Captcha">
+                    <button class="btn btn-primary w-100" onclick="sendOtp('login')">Send Verification Code</button>
+                </div>
+                <div id="login-step-2" class="hidden">
+                    <p class="text-success small text-center">Code sent to email</p>
+                    <input type="number" id="login-otp" class="form-control mb-3" placeholder="Enter OTP">
+                    <button class="btn btn-success w-100" onclick="verifyOtp('login')">Verify & Login</button>
+                </div>
+                <hr class="my-4">
+                <p class="text-center small">New user? <a href="javascript:void(0)" onclick="showSignup()" class="fw-bold">Sign Up</a></p>
+            </div>
+
+            <div id="signup-box" class="auth-card hidden">
+                <h3 class="fw-bold text-center mb-3">Sign Up</h3>
+                <div id="signup-step-1">
+                    <input type="email" id="signup-email" class="form-control mb-3" placeholder="Email Address">
+                    <div class="d-flex justify-content-between mb-2">
+                        <canvas id="signup-captcha-cvs" width="150" height="40"></canvas>
+                        <button class="btn btn-sm btn-light" onclick="genCap('signup')">↻</button>
+                    </div>
+                    <input type="text" id="signup-captcha-inp" class="form-control mb-3" placeholder="Captcha">
+                    <button class="btn btn-primary w-100" onclick="sendOtp('signup')">Verify Email</button>
+                </div>
+                <div id="signup-step-2" class="hidden">
+                    <p class="text-success small text-center">Code sent to email</p>
+                    <input type="number" id="signup-otp" class="form-control mb-3" placeholder="Enter OTP">
+                    <button class="btn btn-success w-100" onclick="verifyOtp('signup')">Verify & Create Account</button>
+                </div>
+                <hr class="my-4">
+                <p class="text-center small">Have an account? <a href="javascript:void(0)" onclick="showLogin()" class="fw-bold">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="view-section full-height">
+        <div class="dash-container">
+            <div id="dash-warning" class="alert alert-warning hidden d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start">
+                <span class="mb-2 mb-md-0"><i class="bi bi-clock-history me-2"></i> Plan expires in <span id="days-left" class="fw-bold"></span> days.</span>
+                <button class="btn btn-sm btn-warning fw-bold w-100 w-md-auto" onclick="openPlanModal()">Renew</button>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0">Account</h4>
+                <select id="currency-select-dash" class="form-select form-select-sm shadow-sm" style="width:auto;" onchange="syncCurrency(this.value)">
+                    <option value="PKR">PKR</option>
+                    <option value="USD">USD</option>
+                    <option value="INR">INR</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                </select>
+            </div>
+
+            <div class="account-card">
+                <div class="detail-row"><span class="text-muted">Email</span><span class="fw-bold text-break" id="d-email">...</span></div>
+                <div class="detail-row"><span class="text-muted">Status</span><span id="d-status" class="fw-bold">...</span></div>
+                <div class="detail-row"><span class="text-muted">Current Plan</span><span class="fw-bold text-primary" id="d-plan">...</span></div>
+                <div class="detail-row">
+                    <span class="text-muted">Dates</span>
+                    <span class="small text-end text-md-start">Start: <span id="d-curr" class="fw-bold">...</span><br>Exp: <span id="d-exp" class="fw-bold text-danger">...</span></span>
+                </div>
+                <div class="mt-3"><button id="action-btn" class="btn btn-primary w-100" onclick="openPlanModal()">Choose Plan</button></div>
+            </div>
+            <h4 class="fw-bold mb-3">OMR Tools</h4>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <button class="tool-btn text-success" onclick="accessTool('maker')"><i class="bi bi-file-earmark-plus-fill fs-1 mb-2 d-block"></i> OMR Maker</button>
+                <button class="tool-btn text-info" onclick="accessTool('checker')"><i class="bi bi-qr-code-scan fs-1 mb-2 d-block"></i> OMR Checker</button>
+            </div>
+        </div>
+        <div id="tool-container" class="hidden bg-white position-fixed top-0 start-0 w-100 h-100" style="z-index:3000; padding-top:60px;">
+            <button class="btn btn-danger position-absolute top-0 end-0 m-3" style="z-index:3001;" onclick="closeTool()">Close</button>
+            <iframe id="app-frame" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+    </div>
+
+    <div id="plan-modal" class="overlay">
+        <div class="modal-custom">
+            <div class="d-flex justify-content-between mb-4">
+                <h3>Select Package</h3>
+                <button class="btn-close" onclick="closePlanModal()"></button>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card p-3 text-center h-100 opacity-75">
+                        <h5>Monthly</h5>
+                        <h3 class="text-primary" id="m-price-monthly">500 PKR</h3>
+                        <button class="btn btn-secondary mt-3 w-100" disabled>Unavailable</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 text-center h-100 opacity-75">
+                        <h5>Saver</h5>
+                        <h3 class="text-primary" id="m-price-saver">2500 PKR</h3>
+                        <button class="btn btn-secondary mt-3 w-100" disabled>Unavailable</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 text-center h-100 border-primary shadow">
+                        <div class="badge bg-primary mb-2 mx-auto">Best Value</div>
+                        <h5>Annual</h5>
+                        <h3 class="text-primary" id="m-price-annual">5000 PKR</h3>
+                        <button class="btn btn-primary mt-3 w-100" onclick="showPayment('Annual', 365, 5000)">Select</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="payment-form" class="hidden mt-4 border-top pt-4">
+                <h5 class="text-danger fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Automatic Payment Suspended</h5>
+                
+                <div class="plan-preview">
+                    <strong>Plan:</strong> <span id="sel-plan-name"></span> (+<span id="sel-plan-days"></span> days)<br>
+                    <span id="expiry-calc-msg" class="text-primary fw-bold mt-1 d-block small"></span>
+                    <hr class="my-2">
+                    <strong>Total:</strong> <span id="sel-plan-disp-price" class="fs-5"></span>
+                    <span class="text-muted small d-block">(Base: <span id="sel-plan-base-price"></span> PKR)</span>
+                </div>
+
+                <div class="alert alert-info text-center border-info">
+                    <h6 class="fw-bold mb-2">Manual Upgrade Required</h6>
+                    <p class="mb-3 text-muted small">Automatic payments are currently under maintenance. To activate your plan, please contact our support directly via WhatsApp.</p>
+                    
+                    <a id="whatsapp-link" href="#" target="_blank" class="btn btn-success w-100 py-3 fw-bold shadow-sm">
+                        <i class="bi bi-whatsapp fs-5 me-2"></i> Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ===========================================
+        // IMPORTANT: PASTE YOUR WEB APP URL HERE
+        // ===========================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzynOyjoPF416SSh69E1Im1KaO9o8s524r6huglFfsLpr46ovR6YaFnw2CnKlYtlj8gjQ/exec'; 
+
+        let captchas = {login:'', signup:''};
+        let curEmail = '';
+        let curStatus = 'Inactive';
+        let curExpDate = null; 
+        let selPlan = {};
+        let rates = { 'PKR': 1, 'USD': 0.0036, 'INR': 0.30, 'EUR': 0.0033, 'GBP': 0.0028 };
+        const symbols = { 'PKR': 'Rs', 'USD': '$', 'INR': '₹', 'EUR': '€', 'GBP': '£' };
+        let activeCurrency = 'PKR';
+
+        window.onload = function() {
+            const u = localStorage.getItem('omr_user');
+            if(u) { curEmail = u; loadData(); }
+            updateNav();
+            fetchLiveRates(); 
+        };
+
+        // --- API HELPER ---
+        async function callApi(action, payload = {}) {
+            if(SCRIPT_URL.includes('PASTE_YOUR')) {
+                alert("Configuration Error: Please edit Index.html and paste your Script URL at the bottom!");
+                return null;
+            }
+            document.getElementById('global-loader').style.display = 'flex';
+            
+            const bodyData = { action: action, ...payload };
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify(bodyData)
+                });
+                const data = await response.json();
+                document.getElementById('global-loader').style.display = 'none';
+                
+                if(data.status === 'error') throw new Error(data.message);
+                return data.data;
+            } catch (e) {
+                document.getElementById('global-loader').style.display = 'none';
+                console.error(e);
+                toast("Connection Error: " + e.message);
+                throw e;
+            }
+        }
+
+        function fetchLiveRates() {
+            fetch('https://api.exchangerate-api.com/v4/latest/PKR')
+                .then(response => response.json())
+                .then(data => {
+                    rates['USD'] = data.rates.USD;
+                    rates['INR'] = data.rates.INR;
+                    rates['EUR'] = data.rates.EUR;
+                    rates['GBP'] = data.rates.GBP;
+                    const ld = document.getElementById('rate-loader');
+                    if(ld) { ld.innerText = "Live rates updated"; ld.classList.add('text-success'); }
+                    updateCurrency(); 
+                }).catch(err => console.error(err));
+        }
+
+        function toast(m) {
+            const b = document.getElementById('toast-box');
+            const d = document.createElement('div');
+            d.className = 'toast-msg'; d.innerText = m;
+            b.appendChild(d); setTimeout(()=>d.remove(), 3000);
+        }
+
+        function navigateTo(v) {
+            document.querySelectorAll('.view-section').forEach(e=>e.classList.remove('view-active'));
+            document.getElementById(v+'-view').classList.add('view-active');
+            
+            // Close mobile navbar if open
+            const nav = document.getElementById('navbarNav');
+            if(nav.classList.contains('show')) {
+                const bsCollapse = new bootstrap.Collapse(nav);
+                bsCollapse.hide();
+            }
+
+            if(v==='auth') showLogin();
+        }
+
+        function updateNav() {
+            const isLog = !!curEmail;
+            const logBtn = document.getElementById('nav-login-btn');
+            const dashBtn = document.getElementById('nav-dash-btn');
+            const outBtn = document.getElementById('nav-logout-btn');
+
+            if(isLog) {
+                logBtn.classList.add('hidden');
+                dashBtn.classList.remove('hidden');
+                outBtn.classList.remove('hidden');
+            } else {
+                logBtn.classList.remove('hidden');
+                dashBtn.classList.add('hidden');
+                outBtn.classList.add('hidden');
+            }
+        }
+        
+        function showPackages() { navigateTo('landing'); setTimeout(()=>document.getElementById('packages-section').scrollIntoView({behavior:'smooth'}),100); }
+        function scrollToId(id) { navigateTo('landing'); setTimeout(()=>document.getElementById(id).scrollIntoView({behavior:'smooth'}),100); }
+
+        function syncCurrency(val) {
+            activeCurrency = val;
+            const lSelect = document.getElementById('currency-select-landing');
+            const dSelect = document.getElementById('currency-select-dash');
+            if(lSelect) lSelect.value = val;
+            if(dSelect) dSelect.value = val;
+            updateCurrency();
+        }
+
+        function updateCurrency() {
+            const r = rates[activeCurrency];
+            const s = symbols[activeCurrency];
+            const setPrice = (id, base) => {
+                const val = (base * r).toFixed(activeCurrency==='PKR'?0:2);
+                const els = document.querySelectorAll(id);
+                els.forEach(el => el.innerText = `${s} ${val}`);
+            };
+            setPrice('#p-price-monthly', 500);
+            setPrice('#p-price-saver', 2500);
+            setPrice('#p-price-annual', 5000);
+            setPrice('#m-price-monthly', 500);
+            setPrice('#m-price-saver', 2500);
+            setPrice('#m-price-annual', 5000);
+        }
+
+        function handlePlanClick(name, days, pkrPrice) {
+            if(curEmail) { navigateTo('dashboard'); openPlanModal(); }
+            else { navigateTo('auth'); toast("Please Login to select plan"); }
+        }
+
+        // --- AUTH ---
+        function showLogin() {
+            document.getElementById('login-box').classList.remove('hidden');
+            document.getElementById('signup-box').classList.add('hidden');
+            genCap('login');
+            document.getElementById('login-step-1').classList.remove('hidden');
+            document.getElementById('login-step-2').classList.add('hidden');
+        }
+        function showSignup() {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('signup-box').classList.remove('hidden');
+            genCap('signup');
+            document.getElementById('signup-step-1').classList.remove('hidden');
+            document.getElementById('signup-step-2').classList.add('hidden');
+        }
+        function genCap(type) {
+            const cvs = document.getElementById(type+'-captcha-cvs');
+            const ctx = cvs.getContext('2d');
+            const chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+            let txt = "";
+            for(let i=0; i<6; i++) txt += chars.charAt(Math.floor(Math.random()*chars.length));
+            captchas[type] = txt;
+            ctx.clearRect(0,0,150,40); ctx.fillStyle='#f1f3f4'; ctx.fillRect(0,0,150,40);
+            for(let i=0; i<7; i++){
+                ctx.strokeStyle='#ccc'; ctx.beginPath();
+                ctx.moveTo(Math.random()*150, Math.random()*40);
+                ctx.lineTo(Math.random()*150, Math.random()*40);
+                ctx.stroke();
+            }
+            ctx.font='bold 24px Arial'; ctx.fillStyle='#333'; ctx.textBaseline='middle';
+            for(let i=0; i<6; i++) ctx.fillText(txt[i], 20+(i*20), 20+(Math.random()-0.5)*5);
+        }
+
+        function sendOtp(type) {
+            const em = document.getElementById(type+'-email').value;
+            const cp = document.getElementById(type+'-captcha-inp').value;
+            if(!em) return toast("Enter Email");
+            if(cp.toUpperCase() !== captchas[type]) { toast("Bad Captcha"); genCap(type); return; }
+            
+            callApi('sendOtp', {email: em, type: type}).then(() => {
+                document.getElementById(type+'-step-1').classList.add('hidden');
+                document.getElementById(type+'-step-2').classList.remove('hidden');
+            });
+        }
+
+        function verifyOtp(type) {
+            const em = document.getElementById(type+'-email').value;
+            const otp = document.getElementById(type+'-otp').value;
+            callApi('verifyOtp', {email: em, otp: otp, type: type}).then(() => {
+                localStorage.setItem('omr_user', em);
+                curEmail = em; updateNav(); loadData();
+            });
+        }
+
+        // --- DATA ---
+        function loadData() {
+            callApi('getAccountDetails', {email: curEmail}).then(d => {
+                if(!d) { logout(); return; }
+                navigateTo('dashboard');
+                document.getElementById('d-email').innerText = d.email;
+                document.getElementById('d-plan').innerText = d.package;
+                document.getElementById('d-curr').innerText = d.current;
+                document.getElementById('d-exp').innerText = d.expiry;
+                curExpDate = (d.status === 'Active' && d.expiry !== "No Plan") ? new Date(d.expiry) : null;
+                const badge = document.getElementById('d-status');
+                badge.innerText = d.status;
+                badge.className = `status-badge ${d.status==='Active'?'status-active':'status-inactive'}`;
+                curStatus = d.status;
+                document.getElementById('action-btn').innerText = d.status==='Active' ? "Renew Plan" : "Choose Plan";
+                const warn = document.getElementById('dash-warning');
+                if(d.status==='Active' && d.daysRemaining<=10) {
+                    warn.classList.remove('hidden');
+                    document.getElementById('days-left').innerText = d.daysRemaining;
+                } else warn.classList.add('hidden');
+            });
+        }
+
+        function accessTool(t) {
+            if(curStatus !== 'Active') return toast("Account Inactive");
+            callApi('getAccountDetails', {email: curEmail}).then(d => {
+                if(d.status==='Active') {
+                    document.getElementById('tool-container').classList.remove('hidden');
+                    // Get Tool URL from API
+                    callApi('getToolUrl', {toolName: t}).then(u => {
+                        document.getElementById('app-frame').src = u;
+                    });
+                } else { loadData(); toast("Plan Expired"); }
+            });
+        }
+
+        function closeTool() {
+            document.getElementById('tool-container').classList.add('hidden');
+            document.getElementById('app-frame').src='';
+            loadData();
+        }
+
+        function sendContact() {
+            const n=document.getElementById('c-name').value;
+            const e=document.getElementById('c-email').value;
+            const m=document.getElementById('c-msg').value;
+            if(!n||!e||!m) return toast("Fill all fields");
+            callApi('sendContactEmail', {name: n, email: e, message: m}).then(() => {
+                toast("Sent!"); document.getElementById('c-msg').value='';
+            });
+        }
+
+        // --- MODAL ---
+        function openPlanModal() { 
+            document.getElementById('plan-modal').style.display='flex'; 
+            document.getElementById('payment-form').classList.add('hidden'); 
+            updateCurrency(); 
+        }
+        function closePlanModal() { document.getElementById('plan-modal').style.display='none'; }
+        
+        function showPayment(n, d, pkr) {
+            selPlan = {name:n, days:d};
+            document.getElementById('payment-form').classList.remove('hidden');
+            document.getElementById('sel-plan-name').innerText = n;
+            document.getElementById('sel-plan-days').innerText = d;
+            const r = rates[activeCurrency];
+            const s = symbols[activeCurrency];
+            const finalPrice = (pkr * r).toFixed(activeCurrency==='PKR'?0:2);
+            document.getElementById('sel-plan-disp-price').innerText = `${s} ${finalPrice}`;
+            document.getElementById('sel-plan-base-price').innerText = pkr;
+            
+            // Create WhatsApp Link with pre-filled message
+            const msg = `Hello, I want to manually activate the ${n} Plan (${d} days) for email: ${curEmail}`;
+            const waLink = `https://wa.me/923181530761?text=${encodeURIComponent(msg)}`;
+            document.getElementById('whatsapp-link').href = waLink;
+
+            let base = new Date();
+            let calcMsg = "";
+            if (curStatus === 'Active' && curExpDate && curExpDate > base) {
+                base = new Date(curExpDate); 
+                calcMsg = `Current plan active until ${base.toISOString().split('T')[0]}. `;
+            } else {
+                calcMsg = "Plan starts today. ";
+            }
+            base.setDate(base.getDate() + parseInt(d));
+            let newDateStr = base.toISOString().split('T')[0];
+            calcMsg += `New Valid Till: ${newDateStr}`;
+            document.getElementById('expiry-calc-msg').innerText = calcMsg;
+        }
+
+        function logout() { 
+            localStorage.removeItem('omr_user'); 
+            curEmail=''; 
+            updateNav(); 
+            navigateTo('landing'); 
+            toast("Logged Out");
+        }
+    </script>
+</body>
+</html>
