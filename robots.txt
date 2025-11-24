@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://stcontent.github.io/OMR/program.html/sitemap.xml
