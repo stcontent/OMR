@@ -1,20 +1,41 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RZKMZ1TF7S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RZKMZ1TF7S');
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart OMR System</title>
+    <title>Smart OMR System | Design, Print & Scan OMR Sheets</title>
+    
+    <meta name="description" content="The complete OMR solution. Use our OMR Maker to design custom answer sheets and our OMR Checker to grade them instantly with your phone. Accurate, fast, and easy.">
+    
+    <meta name="keywords" content="OMR System, OMR Sheet Maker, OMR Sheet Generator, OMR Checker, Exam Grading Software, Create OMR Sheet Online, Optical Mark Recognition">
+    <meta name="author" content="Smart OMR System">
+    
+    <meta property="og:title" content="Smart OMR System - Create & Grade Exams">
+    <meta property="og:description" content="Design custom answer sheets (Maker) and grade them with your phone (Checker). The all-in-one exam solution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.your-custom-domain.com"> 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root { --primary: #0d47a1; --bg: #f8f9fa; }
-        body { font-family: 'Outfit', sans-serif; background: var(--bg); padding-top: 70px; min-height: 100vh; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); padding-top: 70px; min-height: 100vh; display: flex; flex-direction: column; }
         
         /* UTILS */
         .hidden { display: none !important; }
-        .view-section { display: none; animation: fade 0.3s; }
+        .view-section { display: none; animation: fade 0.3s; flex: 1; }
         .view-active { display: block; }
         .full-height { min-height: calc(100vh - 70px); display: none; flex-direction: column; }
         .full-height.view-active { display: flex; }
@@ -62,13 +83,24 @@
 
         /* MODAL */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 15px; }
-        .modal-custom { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .modal-custom { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         .plan-preview { background: #f0f8ff; border: 1px solid #b3e5fc; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
         
         /* TOAST & LOADER */
         #toast-box { position: fixed; top: 80px; right: 20px; z-index: 9999; }
         .toast-msg { background: #333; color: white; padding: 12px 20px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; }
         #global-loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; display:none; justify-content:center; align-items:center; flex-direction:column; }
+        
+        /* FOOTER */
+        footer { background: white; padding: 20px 0; border-top: 1px solid #eee; margin-top: auto; }
+        footer a { color: #666; text-decoration: none; font-size: 0.9rem; }
+        footer a:hover { color: var(--primary); }
+
+        /* PRIVACY POLICY */
+        .policy-container { max-width: 800px; margin: 40px auto; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+        .policy-container h2 { color: var(--primary); font-weight: 700; margin-bottom: 20px; }
+        .policy-container h4 { margin-top: 20px; font-size: 1.1rem; font-weight: 600; }
+        .policy-container p { color: #555; line-height: 1.6; font-size: 0.95rem; }
 
         /* --- MOBILE MENU STYLING --- */
         @media (max-width: 991px) {
@@ -100,6 +132,7 @@
             .full-height { justify-content: start; padding-top: 20px; }
         }
     </style>
+    <meta name="google-site-verification" content="Rp_eoMwnDy0Hw1oQBI--pztFagWGKaP_kpUaTDius6U" />
 </head>
 <body>
 
@@ -141,11 +174,12 @@
     <div id="landing-view" class="view-section view-active">
         <section class="hero text-center">
             <div class="container px-4">
-                <h1 class="fw-bold display-4 mb-3">Professional OMR Grading</h1>
-                <p class="lead opacity-75 mb-4">Design Sheets. Scan with Phone. Get Results.</p>
+               <h1 class="fw-bold display-4 mb-3">Smart OMR System: <br>Maker & Checker</h1>
+                <p class="lead opacity-75 mb-4">The complete exam solution. <strong>Generate</strong> custom OMR sheets and <strong>Grade</strong> them instantly using your mobile.</p>
                 <button class="btn btn-light text-primary fw-bold px-5" onclick="showPackages()">View Plans</button>
             </div>
         </section>
+        
 
         <section id="detail-section" class="container py-5">
             <div class="row g-5 align-items-center">
@@ -209,35 +243,39 @@
                     </div>
                 </div>
                 <div class="row g-4 justify-content-center">
-                    <div class="col-md-4">
-                        <div class="card p-4 text-center h-100 border-0 shadow-sm">
-                            <h4>Monthly</h4>
-                            <h2 class="text-primary my-3" id="p-price-monthly">500 PKR</h2>
-                            <p class="text-muted">30 Days</p>
-                            <button class="btn btn-outline-primary w-100" onclick="handlePlanClick('Monthly', 30, 500)">Select</button>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card p-4 text-center h-100 border-primary shadow">
                             <div class="badge bg-primary mb-2 mx-auto">Best Value</div>
-                            <h4>Saver</h4>
-                            <h2 class="text-primary my-3" id="p-price-saver">2500 PKR</h2>
-                            <p class="text-muted">180 Days</p>
-                            <button class="btn btn-primary w-100" onclick="handlePlanClick('Saver', 180, 2500)">Select</button>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card p-4 text-center h-100 border-0 shadow-sm">
                             <h4>Annual</h4>
                             <h2 class="text-primary my-3" id="p-price-annual">5000 PKR</h2>
                             <p class="text-muted">365 Days</p>
-                            <button class="btn btn-outline-primary w-100" onclick="handlePlanClick('Annual', 365, 5000)">Select</button>
+                            <button class="btn btn-primary w-100" onclick="handlePlanClick('Annual', 365, 5000)">Select</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
+<section class="container py-5">
+    <h3 class="fw-bold text-center mb-4">Frequently Asked Questions</h3>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">How do I scan OMR sheets with my phone?</button></h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Simply log in to the Smart OMR dashboard on your mobile browser, select "OMR Checker," and use your camera to scan the sheet. Our AI instantly grades it.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Is this OMR software free?</button></h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">We offer paid plans for high-volume scanning. The Annual plan provides the best value for schools and coaching centers in Pakistan.</div></div>
+                </div>
+                 <div class="accordion-item">
+                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Can I print sheets on a normal printer?</button></h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yes! Our OMR Maker generates standard A4 PDFs that work with any home or office laser/inkjet printer.</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
         <section id="contact-section" class="py-5">
             <div class="container">
                 <div class="row justify-content-center">
@@ -344,6 +382,59 @@
         </div>
     </div>
 
+    <div id="policy-view" class="view-section">
+        <div class="container">
+            <div class="policy-container">
+                <h2 class="text-center">Privacy Policy</h2>
+                <p class="text-center text-muted mb-4">Last Updated: October 2023</p>
+
+                <h4>1. Introduction</h4>
+                <p>Welcome to Smart OMR System. We respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, and safeguard your data when you use our website and OMR tools.</p>
+
+                <h4>2. Information We Collect</h4>
+                <p>We only collect the information necessary to provide our services:</p>
+                <ul>
+                    <li><strong>Account Information:</strong> We collect your email address when you sign up to create a unique user identity and manage your subscription plan.</li>
+                    <li><strong>Usage Data:</strong> We may collect anonymous data regarding how our tools (OMR Maker and Checker) are used to improve performance.</li>
+                    <li><strong>OMR Data:</strong> While you use the OMR Checker, the processing happens within the application session. We do not permanently store your scanned student answer sheets on our public servers unless explicitly saved by you for reporting purposes.</li>
+                </ul>
+
+                <h4>3. How We Use Your Information</h4>
+                <p>Your data is used solely for:</p>
+                <ul>
+                    <li>Authentication and account management.</li>
+                    <li>Processing your subscription plans (Monthly, Saver, Annual).</li>
+                    <li>Sending critical account notifications (e.g., OTP codes, expiry warnings).</li>
+                    <li>Responding to your support inquiries via the contact form.</li>
+                </ul>
+
+                <h4>4. Data Security</h4>
+                <p>We implement standard security measures to protect your email and session data. We do not sell, trade, or rent your personal identification information to others.</p>
+
+                <h4>5. Third-Party Services</h4>
+                <p>Our application may use third-party APIs (such as Google Scripts for backend processing) to function. These providers are obligated to protect your data according to their own strict privacy policies.</p>
+
+                <h4>6. Contact Us</h4>
+                <p>If you have questions about this Privacy Policy, please contact us via the "Contact" section on our homepage or email us at <strong>studyappscontent@gmail.com</strong>.</p>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary" onclick="navigateTo('landing')">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p class="mb-1 text-muted">&copy; 2023 Smart OMR System. All rights reserved.</p>
+            <div>
+                <a href="javascript:void(0)" onclick="navigateTo('policy')">Privacy Policy</a>
+                <span class="mx-2 text-muted">|</span>
+                <a href="javascript:void(0)" onclick="scrollToId('contact-section')">Support</a>
+            </div>
+        </div>
+    </footer>
+
     <div id="plan-modal" class="overlay">
         <div class="modal-custom">
             <div class="d-flex justify-content-between mb-4">
@@ -351,26 +442,13 @@
                 <button class="btn-close" onclick="closePlanModal()"></button>
             </div>
             
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <div class="card p-3 text-center h-100">
-                        <h5>Monthly</h5>
-                        <h3 class="text-primary" id="m-price-monthly">500 PKR</h3>
-                        <button class="btn btn-outline-primary mt-3 w-100" onclick="showPayment('Monthly', 30, 500)">Select</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card p-3 text-center h-100 border-primary">
-                        <h5>Saver</h5>
-                        <h3 class="text-primary" id="m-price-saver">2500 PKR</h3>
-                        <button class="btn btn-primary mt-3 w-100" onclick="showPayment('Saver', 180, 2500)">Select</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card p-3 text-center h-100">
+            <div class="row g-3 justify-content-center">
+                <div class="col-12">
+                    <div class="card p-3 text-center h-100 border-primary shadow">
+                        <div class="badge bg-primary mb-2 mx-auto">Best Value</div>
                         <h5>Annual</h5>
                         <h3 class="text-primary" id="m-price-annual">5000 PKR</h3>
-                        <button class="btn btn-outline-primary mt-3 w-100" onclick="showPayment('Annual', 365, 5000)">Select</button>
+                        <button class="btn btn-primary mt-3 w-100" onclick="showPayment('Annual', 365, 5000)">Select</button>
                     </div>
                 </div>
             </div>
@@ -474,6 +552,9 @@
             document.querySelectorAll('.view-section').forEach(e=>e.classList.remove('view-active'));
             document.getElementById(v+'-view').classList.add('view-active');
             
+            // Scroll to top
+            window.scrollTo(0,0);
+
             // Close mobile navbar if open
             const nav = document.getElementById('navbarNav');
             if(nav.classList.contains('show')) {
